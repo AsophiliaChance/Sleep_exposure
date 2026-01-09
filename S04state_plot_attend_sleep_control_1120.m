@@ -1,0 +1,268 @@
+%% ======================================================  
+%  ATTEND condition — Control/Sleep 分开 + 2x4 subplot
+%  - 第一行：N2b（central）
+%  - 第二行：P3b（parietal）
+%  - 每个坐标系填充对应时间窗（N2b / P3b）
+%  - 每个图画对应组的 Pre / Post 两条曲线 + SE shading
+%  - subplot(2,4,1) 左上角加 legend（Pre / Post）
+%  - 标题：Small change-Control / Large change-Sleep 等
+%  - 输出 600 dpi TIFF
+% ======================================================
+
+clc; clear;
+cd('G:\study2\results');      % <<< 修改为你的路径
+
+% -------------------- 数据文件 ----------------
+files = { ...
+    'S001control_ATT_pre_ATTnsubavg.mat', ... % Control-Pre
+    'S002_ATT_pre_ATTnsubavg.mat', ...        % Sleep-Pre
+    'S001control_ATT_post_ATTnsubavg.mat', ...% Control-Post
+    'S002_ATT_post_ATTnsubavg.mat'};          % Sleep-Post
+
+% -------------------- 时间窗（毫秒） ----------------
+N2b_amp_win  = [210 270];   % central
+P3b_amp_win  = [369 439];   % parietal
+
+% -------------------- 电极簇 -----------------
+CN_all = unique([29 30 36 37   5 6 12 11   87 104 105 111]); % central (N2b)
+PR_all = unique([47 52 59 60   61 62 72 78  85 91 92 98]);   % parietal (P3b)
+
+% ---- 填充颜色（淡色） ----
+N2b_fill = [1.0 0.88 0.88];   % N2b 区域淡红
+P3b_fill = [0.88 0.90 1.0];   % P3b 区域淡蓝
+
+% -------------------- 载入数据 ----------------
+S = cell(1,4);
+for md = 1:4
+    S{md} = load(files{md});   % 需包含 DEV_avg（cell: nSub × nDeviants）
+end
+ndev = size(S{1}.Diff_avg, 2);  % deviants 数，一般 2（small/large）
+
+%% ============ 收集波形：按 dev × 条件（CP, CPo, EP, EPo） ============
+% CP  = Control-Pre   (S{1})
+% CPo = Control-Post  (S{3})
+% EP  = Sleep-Pre     (S{2})
+% EPo = Sleep-Post    (S{4})
+
+W = struct();
+condFields = {'CP','CPo','EP','EPo'};
+
+for idev = 1:ndev
+    % 初始化
+    for cf = condFields
+        W(idev).(cf{1}).N2b = [];
+        W(idev).(cf{1}).P3b = [];
+    end
+
+    % ---- Control-Pre ----
+    for s = 1:size(S{1}.Diff_avg,1)
+        tl = S{1}.Diff_avg{s,idev};
+        if s==1, t_ms = tl.time * 1000; end
+        cidx = label2idx(tl.label, CN_all);
+        pidx = label2idx(tl.label, PR_all);
+        W(idev).CP.N2b(end+1,:) = mean(tl.avg(cidx,:),1);
+        W(idev).CP.P3b(end+1,:) = mean(tl.avg(pidx,:),1);
+    end
+
+    % ---- Sleep-Pre ----
+    for s = 1:size(S{2}.Diff_avg,1)
+        tl = S{2}.Diff_avg{s,idev};
+        cidx = label2idx(tl.label, CN_all);
+        pidx = label2idx(tl.label, PR_all);
+        W(idev).EP.N2b(end+1,:) = mean(tl.avg(cidx,:),1);
+        W(idev).EP.P3b(end+1,:) = mean(tl.avg(pidx,:),1);
+    end
+
+    % ---- Control-Post ----
+    for s = 1:size(S{3}.Diff_avg,1)
+        tl = S{3}.Diff_avg{s,idev};
+        cidx = label2idx(tl.label, CN_all);
+        pidx = label2idx(tl.label, PR_all);
+        W(idev).CPo.N2b(end+1,:) = mean(tl.avg(cidx,:),1);
+        W(idev).CPo.P3b(end+1,:) = mean(tl.avg(pidx,:),1);
+    end
+
+    % ---- Sleep-Post ----
+    for s = 1:size(S{4}.Diff_avg,1)
+        tl = S{4}.Diff_avg{s,idev};
+        cidx = label2idx(tl.label, CN_all);
+        pidx = label2idx(tl.label, PR_all);
+        W(idev).EPo.N2b(end+1,:) = mean(tl.avg(cidx,:),1);
+        W(idev).EPo.P3b(end+1,:) = mean(tl.avg(pidx,:),1);
+    end
+end
+
+%% =================== 绘图 ======================
+devNames = {'Small change','Large change'};   % idev = 1,2
+groups   = {'Control','Sleep'};              % g = 1:Control, 2:Sleep
+
+% 每个 group 的 pre/post 对应到 W 里的字段名
+preField  = {'CP','EP'};    % Control-Pre, Sleep-Pre
+postField = {'CPo','EPo'};  % Control-Post, Sleep-Post
+
+colors = lines(2);  % 1: Pre, 2: Post
+%%
+fh = figure('Color','w','Position',[100 200 800 230]);
+sgtitle('Attend: N2b','FontWeight','bold','FontName','Times New Roman','FontSize',14);
+
+plot_id = 1;
+for d = 1:2
+for g = 1:2      % group: Control / Sleep
+     % dev: Small / Large
+
+        idev = d;  % W 的索引就是 dev
+
+        %% ================= 第一行：N2b =================
+        subplot(1,4,plot_id); hold on;
+        set(gca,'FontName','Times New Roman');
+
+        dat_pre  = W(idev).(preField{g}).N2b;   % nSub × time
+        dat_post = W(idev).(postField{g}).N2b;
+
+        m1  = mean(dat_pre,1);
+        se1 = std(dat_pre,[],1) / sqrt(size(dat_pre,1));
+        m2  = mean(dat_post,1);
+        se2 = std(dat_post,[],1) / sqrt(size(dat_post,1));
+
+        % y 轴范围（可按需要微调）
+        yl = [-2 2];
+        ylim(yl); xlim([-100 600]);
+
+        % N2b 时间窗填充
+        patch([N2b_amp_win(1) N2b_amp_win(2) N2b_amp_win(2) N2b_amp_win(1)], ...
+              [yl(1) yl(1) yl(2) yl(2)], N2b_fill, ...
+              'FaceAlpha',0.35,'EdgeColor','none');
+
+        % Pre / Post SE shading + 曲线
+        fill([t_ms fliplr(t_ms)], [m1+se1 fliplr(m1-se1)], colors(1,:), ...
+            'FaceAlpha',0.25,'EdgeColor','none');
+        fill([t_ms fliplr(t_ms)], [m2+se2 fliplr(m2-se2)], colors(2,:), ...
+            'FaceAlpha',0.25,'EdgeColor','none');
+
+        h1 = plot(t_ms, m1, 'Color', colors(1,:), 'LineWidth',1.6);
+        h2 = plot(t_ms, m2, 'Color', colors(2,:), 'LineWidth',1.6);
+
+         t =title(sprintf('%s-%s', devNames{d}, groups{g}), ...
+              'FontWeight','bold','FontName','Times New Roman','FontSize',10);
+          
+t.Position(2) = t.Position(2) + 0.15; 
+        set(gca,'TickLength',[0.02 0.02]);
+xlabel('Time (ms)','FontName','Times New Roman','FontWeight','bold');
+        if plot_id == 1
+            ylabel('Amplitude (\muV)','FontName','Times New Roman','FontWeight','bold');
+        end
+
+        % 只在第一个 subplot 标 legend
+        if plot_id == 1
+            lgd = legend([h1 h2], {'Pre','Post'}, 'Box','off', ...
+                         'Location','northwest','FontName','Times New Roman','FontSize',9);
+            lgd.ItemTokenSize = [8 8];   % 缩短线段
+        end
+        if plot_id == 1
+%         text(mean(N2b_amp_win)+30, yl(1)+0.25, 'N2b', ...
+%             'Rotation',90, 'HorizontalAlignment','center', ...
+%             'VerticalAlignment','bottom', 'FontWeight','bold', ...
+%             'FontName','Times New Roman', 'FontSize',7.5);
+
+        end
+         plot_id = plot_id + 1;
+axis equal square
+end
+end
+
+% 所有文字加粗（保险起见）
+set(findall(gcf,'-property','FontWeight'),'FontWeight','bold');
+% === 坐标系字体统一加大（非常推荐）===
+set(findall(gcf,'Type','axes'),'FontSize',10,'FontName','Times New Roman','FontWeight','bold');
+
+% 输出 600 dpi TIF
+print(fh, 'Attend_2x4_N2b_PrePost.tif', '-dtiff', '-r600');
+
+fprintf('绘图完成：2x4 N2b，标题/时间窗填充/legend/Pre-Post 已就位。\n');
+
+%%
+fh = figure('Color','w','Position',[100 200 800 230]);
+sgtitle('Attend: P3b','FontWeight','bold','FontName','Times New Roman','FontSize',14);
+
+plot_id = 1;
+for d = 1:2
+for g = 1:2      % group: Control / Sleep
+     % dev: Small / Large
+
+        idev = d;  % W 的索引就是 dev
+
+%% ================= 第二行：P3b =================
+        subplot(1,4, plot_id); hold on;
+        set(gca,'FontName','Times New Roman');
+
+        dat_pre  = W(idev).(preField{g}).P3b;
+        dat_post = W(idev).(postField{g}).P3b;
+
+        m1  = mean(dat_pre,1);
+        se1 = std(dat_pre,[],1) / sqrt(size(dat_pre,1));
+        m2  = mean(dat_post,1);
+        se2 = std(dat_post,[],1) / sqrt(size(dat_post,1));
+
+        yl = [-2 4]; set(gca, 'YTick', [-2 -1 0 1 2 3 4]);
+        ylim(yl); xlim([-100 600]);
+
+        % P3b 时间窗填充
+        patch([P3b_amp_win(1) P3b_amp_win(2) P3b_amp_win(2) P3b_amp_win(1)], ...
+              [yl(1) yl(1) yl(2) yl(2)], P3b_fill, ...
+              'FaceAlpha',0.35,'EdgeColor','none');
+
+        fill([t_ms fliplr(t_ms)], [m1+se1 fliplr(m1-se1)], colors(1,:), ...
+            'FaceAlpha',0.25,'EdgeColor','none');
+        fill([t_ms fliplr(t_ms)], [m2+se2 fliplr(m2-se2)], colors(2,:), ...
+            'FaceAlpha',0.25,'EdgeColor','none');
+
+        h1=plot(t_ms, m1, 'Color', colors(1,:), 'LineWidth',1.6);
+        h2=plot(t_ms, m2, 'Color', colors(2,:), 'LineWidth',1.6);
+
+        t =title(sprintf('%s-%s', devNames{d}, groups{g}), ...
+              'FontWeight','bold','FontName','Times New Roman','FontSize',9);
+           
+t.Position(2) = t.Position(2) + 0.25; 
+        xlabel('Time (ms)','FontName','Times New Roman','FontWeight','bold');
+        if plot_id == 1
+            ylabel('Amplitude (\muV)','FontName','Times New Roman','FontWeight','bold');
+        end
+        set(gca,'TickLength',[0.02 0.02]);
+        if plot_id == 1
+
+%         text(mean(P3b_amp_win)+20, yl(1)+0.5, 'P3b', ...
+%             'Rotation',90, 'HorizontalAlignment','center', ...
+%             'VerticalAlignment','bottom', 'FontWeight','bold', ...
+%             'FontName','Times New Roman', 'FontSize',8);
+    end
+        if plot_id == 1
+            lgd = legend([h1 h2], {'Pre','Post'}, 'Box','off', ...
+                         'Location','northwest','FontName','Times New Roman','FontSize',9);
+            lgd.ItemTokenSize = [8 8];   % 缩短线段
+        end
+        plot_id = plot_id + 1;
+axis equal square
+end
+end
+
+% 所有文字加粗（保险起见）
+set(findall(gcf,'-property','FontWeight'),'FontWeight','bold');
+% === 坐标系字体统一加大（非常推荐）===
+set(findall(gcf,'Type','axes'),'FontSize',10,'FontName','Times New Roman','FontWeight','bold');
+
+% 输出 600 dpi TIF
+print(fh, 'Attend_2x4_P3b_PrePost.tif', '-dtiff', '-r600');
+
+fprintf('绘图完成：2x4 P3b，标题/时间窗填充/legend/Pre-Post 已就位。\n');
+
+%% 辅助函数
+function idx = label2idx(labels,numList)
+    idx = zeros(1,numel(numList));
+    for ii=1:numel(numList)
+        num = numList(ii);
+        k = find(strcmp(labels, sprintf('E%d', num)), 1);
+        if isempty(k), k = find(strcmp(labels, sprintf('%d', num)), 1); end
+        if isempty(k), k = num; end
+        idx(ii) = k;
+    end
+end
