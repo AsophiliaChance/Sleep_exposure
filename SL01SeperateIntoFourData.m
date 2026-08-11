@@ -3,7 +3,7 @@
 clear;clc;
 
 basedir = 'E:\study2\002\sleep\2ndanalysis\analysis';
-datadir={'day1','day2','day3'};
+datadir={‘day0’,'day1','day2','day3'};
 filt='*.vhdr';
 cwd = basedir;
 load('E:\study2\002\sleep\script\possibletriger.mat')
