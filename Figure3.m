@@ -1,4 +1,4 @@
-% UPDATED VERSION ¡ª 2026-08-05
+% UPDATED VERSION Â¡Âª 2026-08-05
 % Figure headings and D/E spacing revised as requested.
 clc; clear; close all
 
