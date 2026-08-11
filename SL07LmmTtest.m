@@ -1,40 +1,40 @@
 %% ============================================================
 % SL06_day_main_effect_withExposure_DeviantType_4days_NoFDR_BonfPairwise.m
 %
-% ÊÊÓÃÓÚ£º
+% é€‚ç”¨äºï¼š
 %   - Day/Night = 4
-%   - ±»ÊÔÔ¼ 20 ÈË
-%   - DeviantType ×÷Îª fixed effect
-%   - °üº¬ Night ¡Á DeviantType ½»»¥×÷ÓÃ
-%   - ²»ÔÙ¶Ô Small/Large deviant ·Ö±ğ½¨Ä£
+%   - è¢«è¯•çº¦ 20 äºº
+%   - DeviantType ä½œä¸º fixed effect
+%   - åŒ…å« Night Ã— DeviantType äº¤äº’ä½œç”¨
+%   - ä¸å†å¯¹ Small/Large deviant åˆ†åˆ«å»ºæ¨¡
 %
-% Ä£ĞÍ±È½Ï£º
+% æ¨¡å‹æ¯”è¾ƒï¼š
 %   Model 0:
 %       Y ~ Days * DeviantType + (1|Subjects)
 %
 %   Model 1:
 %       Y ~ Days * DeviantType + Exposure + (1|Subjects)
 %
-%   Ê¹ÓÃ ML ±È½ÏÁ½¸öÄ£ĞÍ£»
-%   Èô Exposure Ä£ĞÍÏÔÖø¸ÄÉÆÄâºÏ£¬ÔòÑ¡Ôñ´ø Exposure µÄÄ£ĞÍ£»
-%   ·ñÔòÑ¡Ôñ²»´ø Exposure µÄÄ£ĞÍ¡£
+%   ä½¿ç”¨ ML æ¯”è¾ƒä¸¤ä¸ªæ¨¡å‹ï¼›
+%   è‹¥ Exposure æ¨¡å‹æ˜¾è‘—æ”¹å–„æ‹Ÿåˆï¼Œåˆ™é€‰æ‹©å¸¦ Exposure çš„æ¨¡å‹ï¼›
+%   å¦åˆ™é€‰æ‹©ä¸å¸¦ Exposure çš„æ¨¡å‹ã€‚
 %
-% ºóĞø·ÖÎö£º
-%   Ê¹ÓÃÑ¡¶¨Ä£ĞÍ£¬²¢ÓÃ REML ÖØÄâºÏ£º
+% åç»­åˆ†æï¼š
+%   ä½¿ç”¨é€‰å®šæ¨¡å‹ï¼Œå¹¶ç”¨ REML é‡æ‹Ÿåˆï¼š
 %       Y ~ Days * DeviantType (+ Exposure) + (1|Subjects)
 %
-% ¶àÖØ±È½ÏĞ£Õı£º
-%   - ²»¶Ô omnibus model effects ×ö FDR Ğ£Õı
-%   - ²»¶Ô Night 1 one-sample tests ×ö FDR Ğ£Õı
-%   - Ö»¶Ô planned night pairwise comparisons ×ö Bonferroni correction
+% å¤šé‡æ¯”è¾ƒæ ¡æ­£ï¼š
+%   - ä¸å¯¹ omnibus model effects åš FDR æ ¡æ­£
+%   - ä¸å¯¹ Night 1 one-sample tests åš FDR æ ¡æ­£
+%   - åªå¯¹ planned night pairwise comparisons åš Bonferroni correction
 %
-% Êä³ö£º
+% è¾“å‡ºï¼š
 %   ERP_stats_NightByDeviantType_EffectsCoding_4days_NoFDR_BonfPairwise.xlsx
 % ============================================================
 
 clc; clear; close all;
 
-%% -------------------- »ù±¾ÉèÖÃ --------------------
+%% -------------------- åŸºæœ¬è®¾ç½® --------------------
 nDaysExpected = 4;
 nSubExpected  = 20;
 
@@ -44,39 +44,39 @@ devLevels = {'Small','Large'};
 measureNames = {'Amplitude','Latency'};
 componentLabels = {'P2','P450'};
 
-% º¬½»»¥×÷ÓÃÊ±Í³Ò»Ê¹ÓÃ effects coding¡£
-% ÕâÑù Days Ö÷Ğ§Ó¦±íÊ¾¶Ô Small/Large µÈÈ¨Æ½¾ùºóµÄ×ÜÌå Night Ğ§Ó¦¡£
+% å«äº¤äº’ä½œç”¨æ—¶ç»Ÿä¸€ä½¿ç”¨ effects codingã€‚
+% è¿™æ · Days ä¸»æ•ˆåº”è¡¨ç¤ºå¯¹ Small/Large ç­‰æƒå¹³å‡åçš„æ€»ä½“ Night æ•ˆåº”ã€‚
 dummyCoding = 'effects';
 
-%% -------------------- Â·¾¶ÉèÖÃ --------------------
+%% -------------------- è·¯å¾„è®¾ç½® --------------------
 resultDir = 'G:\study2\002\sleep\2ndanalysis\results';
 cd(resultDir);
 
 matFile = fullfile(resultDir, 'erp_statisticsdata_simple.mat');
 exposureFile = 'G:\study2\002\sleep\2ndanalysis\exposure_dur.xlsx';
 
-%% -------------------- ¶ÁÈ¡ ERP Êı¾İ --------------------
+%% -------------------- è¯»å– ERP æ•°æ® --------------------
 load(matFile, 'amplitude_mmn', 'amplitude_p3', 'latency_mmn', 'latency_p3');
 
-%% -------------------- ¶ÁÈ¡ exposure duration --------------------
+%% -------------------- è¯»å– exposure duration --------------------
 expTbl = readtable(exposureFile);
 
 subj_exp = expTbl{:,1};
 expMat   = expTbl{:,2:end};
 
 if size(expMat,2) ~= nDaysExpected
-    error('Exposure ÎÄ¼şÓ¦°üº¬ %d ¸ö day/night ÁĞ¡£µ±Ç°¼ì²âµ½ %d ÁĞ¡£', ...
+    error('Exposure æ–‡ä»¶åº”åŒ…å« %d ä¸ª day/night åˆ—ã€‚å½“å‰æ£€æµ‹åˆ° %d åˆ—ã€‚', ...
         nDaysExpected, size(expMat,2));
 end
 
 nSub_exp = size(expMat,1);
 
 if nSub_exp ~= nSubExpected
-    warning('Exposure ÎÄ¼şÖĞµÄ±»ÊÔÊı²»ÊÇ %d£¬¶øÊÇ %d¡£ÇëÈ·ÈÏÊÇ·ñ·ûºÏÔ¤ÆÚ¡£', ...
+    warning('Exposure æ–‡ä»¶ä¸­çš„è¢«è¯•æ•°ä¸æ˜¯ %dï¼Œè€Œæ˜¯ %dã€‚è¯·ç¡®è®¤æ˜¯å¦ç¬¦åˆé¢„æœŸã€‚', ...
         nSubExpected, nSub_exp);
 end
 
-%% -------------------- ¼ì²é ERP Êı¾İÎ¬¶È --------------------
+%% -------------------- æ£€æŸ¥ ERP æ•°æ®ç»´åº¦ --------------------
 [nNight1, nSub1, nDev1] = size(amplitude_mmn);
 [nNight2, nSub2, nDev2] = size(amplitude_p3);
 [nNight3, nSub3, nDev3] = size(latency_mmn);
@@ -85,26 +85,26 @@ end
 if ~(nNight1 == nDaysExpected && nNight2 == nDaysExpected && ...
      nNight3 == nDaysExpected && nNight4 == nDaysExpected)
 
-    error(['ERP Êı¾İ night Î¬¶È²»ÊÇ %d£¬Çë¼ì²é¡£µ±Ç°Î¬¶È·Ö±ğÎª£º', ...
+    error(['ERP æ•°æ® night ç»´åº¦ä¸æ˜¯ %dï¼Œè¯·æ£€æŸ¥ã€‚å½“å‰ç»´åº¦åˆ†åˆ«ä¸ºï¼š', ...
            'amplitude_mmn=%d, amplitude_p3=%d, latency_mmn=%d, latency_p3=%d'], ...
            nDaysExpected, nNight1, nNight2, nNight3, nNight4);
 end
 
 if ~(nSub1==nSub_exp && nSub2==nSub_exp && nSub3==nSub_exp && nSub4==nSub_exp)
-    error('ERP Êı¾İ±»ÊÔÊıÓë exposure ÎÄ¼şÖĞµÄ±»ÊÔÊı²»Ò»ÖÂ¡£');
+    error('ERP æ•°æ®è¢«è¯•æ•°ä¸ exposure æ–‡ä»¶ä¸­çš„è¢«è¯•æ•°ä¸ä¸€è‡´ã€‚');
 end
 
 if ~(nDev1==2 && nDev2==2 && nDev3==2 && nDev4==2)
-    error('ERP Êı¾İµÚ 3 Î¬Ó¦Îª 2£¬¶ÔÓ¦ Small/Large deviant¡£');
+    error('ERP æ•°æ®ç¬¬ 3 ç»´åº”ä¸º 2ï¼Œå¯¹åº” Small/Large deviantã€‚');
 end
 
-%% -------------------- latency Ê±¼äĞ£Õı --------------------
-% Èç¹û latency_mmn / latency_p3 ÊÇ»ùÓÚ epoch Æğµã£¬ÀıÈç epoch = -0.2 µ½ 0.8£¬
-% Ôò¼õÈ¥ 0.2 ºó±ä³ÉÏà¶Ô´Ì¼¤ÆğµãµÄ latency¡£
+%% -------------------- latency æ—¶é—´æ ¡æ­£ --------------------
+% å¦‚æœ latency_mmn / latency_p3 æ˜¯åŸºäº epoch èµ·ç‚¹ï¼Œä¾‹å¦‚ epoch = -0.2 åˆ° 0.8ï¼Œ
+% åˆ™å‡å» 0.2 åå˜æˆç›¸å¯¹åˆºæ¿€èµ·ç‚¹çš„ latencyã€‚
 latency_mmn = latency_mmn - 0.2;
 latency_p3  = latency_p3  - 0.2;
 
-%% -------------------- ÕûÀí³É³¤±í --------------------
+%% -------------------- æ•´ç†æˆé•¿è¡¨ --------------------
 T_amp = build_long_table_with_deviant( ...
     amplitude_mmn, amplitude_p3, subj_exp, expMat, ...
     'Amplitude', nDaysExpected, dayLevels, devLevels);
@@ -115,7 +115,7 @@ T_lat = build_long_table_with_deviant( ...
 
 T_all = {T_amp, T_lat};
 
-%% -------------------- Í³¼Æ·ÖÎö --------------------
+%% -------------------- ç»Ÿè®¡åˆ†æ --------------------
 allFixedRows       = {};
 allDayRows         = {};
 allInteractionRows = {};
@@ -152,8 +152,8 @@ for m = 1:2
         fprintf('%s | %s\n', measureNames{m}, thisComp);
 
         %% ---------- Night 1 amplitude > 0: one-sample t-test ----------
-        % ÕâÀï°Ñ Small ºÍ Large ·ÅÔÚÒ»Æğ£¬¼ìÑé Night 1 µÄÆ½¾ù amplitude ÊÇ·ñ > 0¡£
-        % ²»×ö FDR Ğ£Õı£¬Ö»Êä³öÔ­Ê¼ p_raw¡£
+        % è¿™é‡ŒæŠŠ Small å’Œ Large æ”¾åœ¨ä¸€èµ·ï¼Œæ£€éªŒ Night 1 çš„å¹³å‡ amplitude æ˜¯å¦ > 0ã€‚
+        % ä¸åš FDR æ ¡æ­£ï¼Œåªè¾“å‡ºåŸå§‹ p_rawã€‚
         if strcmp(measureNames{m}, 'Amplitude')
 
             Tn1 = Tc0(Tc0.Days == '1', :);
@@ -192,12 +192,12 @@ for m = 1:2
             end
         end
 
-        %% ---------- Ä£ĞÍ±È½Ï£ºÓĞÎŞ Exposure ----------
-        % Ä£ĞÍ±È½Ï±ØĞëÊ¹ÓÃÍ¬Ò»ÅúÊı¾İ£¬ËùÒÔÕâÀïÈ¥µô Y »ò Exposure È±Ê§µÄĞĞ¡£
+        %% ---------- æ¨¡å‹æ¯”è¾ƒï¼šæœ‰æ—  Exposure ----------
+        % æ¨¡å‹æ¯”è¾ƒå¿…é¡»ä½¿ç”¨åŒä¸€æ‰¹æ•°æ®ï¼Œæ‰€ä»¥è¿™é‡Œå»æ‰ Y æˆ– Exposure ç¼ºå¤±çš„è¡Œã€‚
         Tc_compare = Tc0(~isnan(Tc0.Y) & ~isnan(Tc0.Exposure), :);
 
         if height(Tc_compare) < 10
-            warning('%s | %s ¿ÉÓÃÓÚÄ£ĞÍ±È½ÏµÄÊı¾İÌ«ÉÙ£¬Ìø¹ı¡£', measureNames{m}, thisComp);
+            warning('%s | %s å¯ç”¨äºæ¨¡å‹æ¯”è¾ƒçš„æ•°æ®å¤ªå°‘ï¼Œè·³è¿‡ã€‚', measureNames{m}, thisComp);
             continue;
         end
 
@@ -234,9 +234,9 @@ for m = 1:2
 
         rModel = rModel + 1;
 
-        %% ---------- ÓÃÑ¡¶¨Ä£ĞÍÖØĞÂÕûÀíÊı¾İ ----------
-        % Èç¹û×îÖÕÄ£ĞÍ²»º¬ Exposure£¬¿ÉÒÔ±£Áô Exposure È±Ê§µ« Y ÓĞĞ§µÄÊı¾İ¡£
-        % Èç¹û×îÖÕÄ£ĞÍº¬ Exposure£¬Ôò±ØĞëÈ¥µô Exposure È±Ê§¡£
+        %% ---------- ç”¨é€‰å®šæ¨¡å‹é‡æ–°æ•´ç†æ•°æ® ----------
+        % å¦‚æœæœ€ç»ˆæ¨¡å‹ä¸å« Exposureï¼Œå¯ä»¥ä¿ç•™ Exposure ç¼ºå¤±ä½† Y æœ‰æ•ˆçš„æ•°æ®ã€‚
+        % å¦‚æœæœ€ç»ˆæ¨¡å‹å« Exposureï¼Œåˆ™å¿…é¡»å»æ‰ Exposure ç¼ºå¤±ã€‚
         if strcmp(selectedModel, 'WithExposure')
             Tc = Tc0(~isnan(Tc0.Y) & ~isnan(Tc0.Exposure), :);
         else
@@ -247,7 +247,7 @@ for m = 1:2
         Tc.Days        = categorical(Tc.Days, dayLevels);
         Tc.DeviantType = categorical(Tc.DeviantType, devLevels);
 
-        %% ---------- Ö÷Ä£ĞÍ£ºREML ----------
+        %% ---------- ä¸»æ¨¡å‹ï¼šREML ----------
         lme = fitlme(Tc, selectedFormula, ...
             'FitMethod', 'REML', 'DummyVarCoding', dummyCoding);
 
@@ -290,11 +290,11 @@ for m = 1:2
             rFixed = rFixed + 1;
         end
 
-        %% ---------- Day Ö÷Ğ§Ó¦ ----------
+        %% ---------- Day ä¸»æ•ˆåº” ----------
         dayRow = find_effect_row(aovOut, 'Days');
 
         if isempty(dayRow)
-            warning('Î´ÔÚ ANOVA ±íÖĞÕÒµ½ Days ĞĞ: %s | %s', measureNames{m}, thisComp);
+            warning('æœªåœ¨ ANOVA è¡¨ä¸­æ‰¾åˆ° Days è¡Œ: %s | %s', measureNames{m}, thisComp);
         else
             [Fval, df1, df2, pval] = extract_effect_values(aovOut, dayRow);
             eta_day = calc_partial_eta2(Fval, df1, df2);
@@ -315,11 +315,11 @@ for m = 1:2
                 num2str(df1), num2str(df2), Fval, pval, eta_day);
         end
 
-        %% ---------- Night ¡Á DeviantType ½»»¥×÷ÓÃ ----------
+        %% ---------- Night Ã— DeviantType äº¤äº’ä½œç”¨ ----------
         interactionRow = find_interaction_effect_row(aovOut, 'Days', 'DeviantType');
 
         if isempty(interactionRow)
-            warning('Î´ÔÚ ANOVA ±íÖĞÕÒµ½ Days ¡Á DeviantType ½»»¥×÷ÓÃ: %s | %s', ...
+            warning('æœªåœ¨ ANOVA è¡¨ä¸­æ‰¾åˆ° Days Ã— DeviantType äº¤äº’ä½œç”¨: %s | %s', ...
                 measureNames{m}, thisComp);
         else
             [Fval_int, df1_int, df2_int, pval_int] = ...
@@ -345,7 +345,7 @@ for m = 1:2
         end
 
         %% ---------- planned marginal comparisons: Day2/3/4 vs Day1 ----------
-        % ÔÚº¬½»»¥×÷ÓÃµÄÄ£ĞÍÖĞ£¬¶Ô Small/Large deviant µÈÈ¨Æ½¾ùºó±È½Ï¸÷ Night Óë Night 1¡£
+        % åœ¨å«äº¤äº’ä½œç”¨çš„æ¨¡å‹ä¸­ï¼Œå¯¹ Small/Large deviant ç­‰æƒå¹³å‡åæ¯”è¾ƒå„ Night ä¸ Night 1ã€‚
         posthocTbl = run_day_planned_comparisons_selected_model( ...
             Tc, selectedFormula, nDaysExpected, dummyCoding);
 
@@ -368,7 +368,7 @@ for m = 1:2
     end
 end
 
-%% -------------------- ½á¹û±íÕûÀí --------------------
+%% -------------------- ç»“æœè¡¨æ•´ç† --------------------
 T_model = cell2table(allModelRows, 'VariableNames', ...
     {'Measure','Component','ModelCompare_p','DeltaAIC_ExpMinusNoExp','DeltaBIC_ExpMinusNoExp','SelectedModel'});
 
@@ -392,10 +392,10 @@ else
         {'Measure','Component','SelectedModel','Comparison','Estimate','SE','DF','t','p_raw','r_effect'});
 end
 
-%% -------------------- Bonferroni Ğ£Õı£º½ö planned night pairwise comparisons --------------------
+%% -------------------- Bonferroni æ ¡æ­£ï¼šä»… planned night pairwise comparisons --------------------
 if ~isempty(T_posthoc)
 
-    % Ö»¶ÔÃ¿¸ö Measure ¡Á Component ÄÚµÄ 3 ¸ö planned comparisons ×ö Bonferroni:
+    % åªå¯¹æ¯ä¸ª Measure Ã— Component å†…çš„ 3 ä¸ª planned comparisons åš Bonferroni:
     % Day2 vs Day1, Day3 vs Day1, Day4 vs Day1
     T_posthoc.p_bonf = nan(height(T_posthoc),1);
 
@@ -404,13 +404,13 @@ if ~isempty(T_posthoc)
         idxGroup = strcmp(T_posthoc.Measure, T_posthoc.Measure{i}) & ...
                    strcmp(T_posthoc.Component, T_posthoc.Component{i});
 
-        nCmp = sum(idxGroup);  % Í¨³£Îª 3
+        nCmp = sum(idxGroup);  % é€šå¸¸ä¸º 3
 
         T_posthoc.p_bonf(i) = min(T_posthoc.p_raw(i) * nCmp, 1);
 
     end
 
-    % planned comparisons ÈÔÈ»Ö»ÔÚ¶ÔÓ¦ Days Ö÷Ğ§Ó¦Ô­Ê¼ p < .05 Ê±±£Áô
+    % planned comparisons ä»ç„¶åªåœ¨å¯¹åº” Days ä¸»æ•ˆåº”åŸå§‹ p < .05 æ—¶ä¿ç•™
     keepMask = false(height(T_posthoc),1);
 
     for i = 1:height(T_posthoc)
@@ -426,7 +426,7 @@ if ~isempty(T_posthoc)
     T_posthoc = T_posthoc(keepMask,:);
 end
 
-%% -------------------- Night 1 amplitude > 0 µ¥Ñù±¾ t ¼ìÑé½á¹û --------------------
+%% -------------------- Night 1 amplitude > 0 å•æ ·æœ¬ t æ£€éªŒç»“æœ --------------------
 if isempty(allNight1Rows)
 
     T_night1 = table();
@@ -438,7 +438,7 @@ else
 
 end
 
-%% -------------------- µ¼³ö Excel --------------------
+%% -------------------- å¯¼å‡º Excel --------------------
 outFile = fullfile(resultDir, ...
     'ERP_stats_NightByDeviantType_EffectsCoding_4days_NoFDR_BonfPairwise.xlsx');
 
@@ -459,9 +459,9 @@ if ~isempty(T_night1)
     writetable(T_night1, outFile, 'Sheet', 'Night1_Amplitude_gt0');
 end
 
-fprintf('\nÍ³¼Æ½á¹ûÒÑ±£´æµ½£º%s\n', outFile);
+fprintf('\nç»Ÿè®¡ç»“æœå·²ä¿å­˜åˆ°ï¼š%s\n', outFile);
 
-%% -------------------- »æÍ¼ --------------------
+%% -------------------- ç»˜å›¾ --------------------
 plot_day_change_raincloud_deviant(T_amp, 'Amplitude', T_posthoc, ...
     fullfile(resultDir, 'ERP_Amplitude_dayChange_DeviantType_4days_NoFDR_BonfPairwise.tif'), ...
     nDaysExpected, dayLevels);
@@ -470,11 +470,11 @@ plot_day_change_raincloud_deviant(T_lat, 'Latency', T_posthoc, ...
     fullfile(resultDir, 'ERP_Latency_dayChange_DeviantType_4days_NoFDR_BonfPairwise.tif'), ...
     nDaysExpected, dayLevels);
 
-fprintf('\nËùÓĞÍ¼ÒÑµ¼³öÍê³É¡£\n');
+fprintf('\næ‰€æœ‰å›¾å·²å¯¼å‡ºå®Œæˆã€‚\n');
 
 
 %% ============================================================
-% ¾Ö²¿º¯Êı
+% å±€éƒ¨å‡½æ•°
 % ============================================================
 
 function T = build_long_table_with_deviant(A_mmn, A_p3, subj_exp, expMat, ...
@@ -531,8 +531,8 @@ T.Component   = categorical(T.Component);
 T.Measure     = categorical(T.Measure);
 T.DeviantType = categorical(T.DeviantType, devLevels);
 
-% ÕâÀïÖ»É¾³ı Y È±Ê§¡£
-% Exposure È±Ê§ÊÇ·ñÉ¾³ı£¬·Åµ½Ä£ĞÍ±È½ÏºÍ×îÖÕÄ£ĞÍ½×¶Î´¦Àí¡£
+% è¿™é‡Œåªåˆ é™¤ Y ç¼ºå¤±ã€‚
+% Exposure ç¼ºå¤±æ˜¯å¦åˆ é™¤ï¼Œæ”¾åˆ°æ¨¡å‹æ¯”è¾ƒå’Œæœ€ç»ˆæ¨¡å‹é˜¶æ®µå¤„ç†ã€‚
 T = T(~isnan(T.Y), :);
 
 end
@@ -578,17 +578,17 @@ end
 function posthocTbl = run_day_planned_comparisons_selected_model( ...
     Tc, selectedFormula, nDays, dummyCoding)
 
-% ÔÚ effects coding ÏÂ£¬Days Ö÷Ğ§Ó¦ÏµÊı±íÊ¾¸÷ Night Ïà¶ÔÓÚ×ÜÌå¾ùÖµµÄÆ«²î¡£
-% ¶Ô Small/Large µÈÈ¨Æ½¾ùÊ±£¬DeviantType ¼° Days ¡Á DeviantType ÏîÏà»¥µÖÏû£¬
-% Òò´Ë planned marginal comparison Ö»ĞèÒª¶Ô Days Ö÷Ğ§Ó¦ÏµÊı¹¹Ôì contrast¡£
+% åœ¨ effects coding ä¸‹ï¼ŒDays ä¸»æ•ˆåº”ç³»æ•°è¡¨ç¤ºå„ Night ç›¸å¯¹äºæ€»ä½“å‡å€¼çš„åå·®ã€‚
+% å¯¹ Small/Large ç­‰æƒå¹³å‡æ—¶ï¼ŒDeviantType åŠ Days Ã— DeviantType é¡¹ç›¸äº’æŠµæ¶ˆï¼Œ
+% å› æ­¤ planned marginal comparison åªéœ€è¦å¯¹ Days ä¸»æ•ˆåº”ç³»æ•°æ„é€  contrastã€‚
 %
-% ¶Ô nDays = 4£¬effects coding µÄ Day ±àÂëÎª£º
+% å¯¹ nDays = 4ï¼Œeffects coding çš„ Day ç¼–ç ä¸ºï¼š
 %   Day1 = [ 1  0  0]
 %   Day2 = [ 0  1  0]
 %   Day3 = [ 0  0  1]
 %   Day4 = [-1 -1 -1]
 %
-% Day k vs Day1 µÄ contrast = code(Day k) - code(Day1)¡£
+% Day k vs Day1 çš„ contrast = code(Day k) - code(Day1)ã€‚
 
 lme = fitlme(Tc, selectedFormula, ...
     'FitMethod', 'REML', 'DummyVarCoding', dummyCoding);
@@ -597,22 +597,22 @@ lme = fitlme(Tc, selectedFormula, ...
 coefNames = string(st.Name);
 covBeta = lme.CoefficientCovariance;
 
-% effects coding ¶Ô nDays ¸öË®Æ½Éú³É nDays-1 ¸ö Days ÏµÊı¡£
+% effects coding å¯¹ nDays ä¸ªæ°´å¹³ç”Ÿæˆ nDays-1 ä¸ª Days ç³»æ•°ã€‚
 dayCoefIdx = nan(1, nDays-1);
 for d = 1:(nDays-1)
     effectName = "Days_" + string(d);
     idx = find(strcmp(coefNames, effectName), 1);
 
     if isempty(idx)
-        error(['Î´ÕÒµ½ effects coding ÏÂµÄ¹Ì¶¨Ğ§Ó¦ÏµÊı %s¡£' ...
-               'Çë¼ì²é Days µÄÀà±ğË®Æ½ºÍ DummyVarCoding ÉèÖÃ¡£'], ...
+        error(['æœªæ‰¾åˆ° effects coding ä¸‹çš„å›ºå®šæ•ˆåº”ç³»æ•° %sã€‚' ...
+               'è¯·æ£€æŸ¥ Days çš„ç±»åˆ«æ°´å¹³å’Œ DummyVarCoding è®¾ç½®ã€‚'], ...
                char(effectName));
     end
 
     dayCoefIdx(d) = idx;
 end
 
-% Ç° nDays-1 ¸öË®Æ½Îªµ¥Î»ÏòÁ¿£¬×îºóÒ»¸öË®Æ½ÎªÈ« -1¡£
+% å‰ nDays-1 ä¸ªæ°´å¹³ä¸ºå•ä½å‘é‡ï¼Œæœ€åä¸€ä¸ªæ°´å¹³ä¸ºå…¨ -1ã€‚
 dayCode = [eye(nDays-1); -ones(1, nDays-1)];
 referenceCode = dayCode(1,:);
 
@@ -646,7 +646,7 @@ for i = 1:nCmp
         p_raw(i) = pContrast;
 
     catch ME
-        warning('coefTest ¶Ô±ÈÊ§°Ü£¬¸ÄÓÃ t ·Ö²¼½üËÆ£º%s', ME.message);
+        warning('coefTest å¯¹æ¯”å¤±è´¥ï¼Œæ”¹ç”¨ t åˆ†å¸ƒè¿‘ä¼¼ï¼š%s', ME.message);
 
         if SE(i) > 0
             tval(i) = Estimate(i) / SE(i);
@@ -748,7 +748,7 @@ for i = 1:2
                 'MarkerEdgeColor', 'none', ...
                 'MarkerFaceAlpha', 0.35);
 
-            %% mean ¡À SEM
+            %% mean Â± SEM
             mu  = mean(yy, 'omitnan');
             sem = std(yy, 'omitnan') / sqrt(sum(~isnan(yy)));
 
@@ -764,7 +764,7 @@ for i = 1:2
         end
     end
 
-    %% ×Ô¶¯ y Öá·¶Î§
+    %% è‡ªåŠ¨ y è½´èŒƒå›´
     if isempty(allY)
 
         yl = [0 1];
@@ -787,7 +787,7 @@ for i = 1:2
 
     ylim(yl);
 
-    %% ÏÔÖøĞÔ±ê¼Ç£ºÊ¹ÓÃ Bonferroni-corrected p
+    %% æ˜¾è‘—æ€§æ ‡è®°ï¼šä½¿ç”¨ Bonferroni-corrected p
     if ~isempty(T_posthoc)
 
         Tsub = T_posthoc(strcmp(T_posthoc.Measure, measureName) & ...
@@ -913,7 +913,7 @@ try
 catch
 end
 
-error('ÎŞ·¨½« anova Êä³ö×ª»»Îª table£¬Çë¼ì²é MATLAB °æ±¾¡£');
+error('æ— æ³•å°† anova è¾“å‡ºè½¬æ¢ä¸º tableï¼Œè¯·æ£€æŸ¥ MATLAB ç‰ˆæœ¬ã€‚');
 
 end
 
@@ -925,7 +925,7 @@ etaVals = nan(nRow, 1);
 
 varNames = aovOut.Properties.VariableNames;
 
-%% ÕÒ F ÁĞ
+%% æ‰¾ F åˆ—
 Fcol = '';
 
 for i = 1:numel(varNames)
@@ -938,7 +938,7 @@ for i = 1:numel(varNames)
     end
 end
 
-%% ÕÒ p ÁĞ
+%% æ‰¾ p åˆ—
 pcol = '';
 
 for i = 1:numel(varNames)
@@ -951,7 +951,7 @@ for i = 1:numel(varNames)
     end
 end
 
-%% ÕÒ df ÁĞ
+%% æ‰¾ df åˆ—
 dfCandidates = {};
 
 for i = 1:numel(varNames)
