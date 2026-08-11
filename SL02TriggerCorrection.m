@@ -1,7 +1,7 @@
-%处理前三周的数据
+%澶勭悊鍓嶄笁鍛ㄧ殑鏁版嵁
 clc;clear
 folder_path = 'G:\study2\002\sleep\night_time_trigger_correction';
-datadir={'day1','day2','day3'};
+datadir={'day0','day1','day2','day3'};
 basedir = 'G:\study2\002\sleep\2ndanalysis\analysis';
 filt='*.set';
 
@@ -17,7 +17,7 @@ for md=1:length(datadir)
     file_list = [file_list(7:end); file_list(1:6)];
     %%
     
-    for curfile = 1:length(files)%处理前三周的数据
+    for curfile = 1:length(files)%澶勭悊鍓嶄笁鍛ㄧ殑鏁版嵁
         %%
         file = files(curfile).name;
         EEG = pop_loadset(file,pwd);
