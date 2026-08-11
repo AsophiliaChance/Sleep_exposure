@@ -37,7 +37,7 @@ for curfile =1:length(files)
 
 
  
-        %% 基线校正，重新分段。
+        %% 禄霉脧脽脨拢脮媒拢卢脰脴脨脗路脰露脦隆拢
         
         for idev=1:length(deviant_types)
                            
