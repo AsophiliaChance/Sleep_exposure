@@ -106,7 +106,7 @@ for idev = 1:nDev
     end
 end
 
-% deviant ºÍ day Î¬¶ÈÆ½¾ù£¬µÃµ½×ÜÌå²¨ĞÎ
+% deviant å’Œ day ç»´åº¦å¹³å‡ï¼Œå¾—åˆ°æ€»ä½“æ³¢å½¢
 Diff_ga = squeeze(mean(mean(Diff_ga,2,'omitnan'),1,'omitnan'));
 DEV_ga  = squeeze(mean(mean(DEV_ga,2,'omitnan'),1,'omitnan'));
 
@@ -125,7 +125,7 @@ winlenght = 0.035;
 idx_p2 = find(time >= 0.35 & time <= 0.47);
 
 if isempty(idx_p2)
-    error('P2 ËÑË÷´°¿ÚÄÚÃ»ÓĞÊ±¼äµã£¬Çë¼ì²é time ·¶Î§¡£');
+    error('P2 æœç´¢çª—å£å†…æ²¡æœ‰æ—¶é—´ç‚¹ï¼Œè¯·æ£€æŸ¥ time èŒƒå›´ã€‚');
 end
 
 [~, p2Idx] = max(Diff_ga(idx_p2));
@@ -135,7 +135,7 @@ p2Time = time(idx_p2(p2Idx));
 idx_p450 = find(time >= 0.5 & time <= 0.7);
 
 if isempty(idx_p450)
-    error('P450 ËÑË÷´°¿ÚÄÚÃ»ÓĞÊ±¼äµã£¬Çë¼ì²é time ·¶Î§¡£');
+    error('P450 æœç´¢çª—å£å†…æ²¡æœ‰æ—¶é—´ç‚¹ï¼Œè¯·æ£€æŸ¥ time èŒƒå›´ã€‚');
 end
 
 [~, p450Idx] = max(Diff_ga(idx_p450));
@@ -152,11 +152,11 @@ fprintf('P450 window: %.3f - %.3f s\n', win.p4501, win.p4502);
 
 
 %% ================== Waveform plot: mean line + SE ==================
-% Ê¹ÓÃ subject-level waveform ¼ÆËã mean ¡À SE£º
+% ä½¿ç”¨ subject-level waveform è®¡ç®— mean Â± SEï¼š
 %   STD  -> Standard
 %   DEV  -> Deviant
 %   Diff1 -> Differential
-% Grand average ÈÔ±£ÁôÓÃÓÚÇ°Ãæ×Ô¶¯Ñ°ÕÒ P2 / P450 Ê±¼ä´°¡£
+% Grand average ä»ä¿ç•™ç”¨äºå‰é¢è‡ªåŠ¨å¯»æ‰¾ P2 / P450 æ—¶é—´çª—ã€‚
 
 dataplot{1} = STD;
 dataplot{2} = DEV;
@@ -217,7 +217,7 @@ for idev = 1:nDev
                 y = y_full(:)';
                 y = y(tidx);
 
-                % Ö»±£Áô³¤¶ÈÒ»ÖÂµÄ subject waveform
+                % åªä¿ç•™é•¿åº¦ä¸€è‡´çš„ subject waveform
                 if numel(y) == numel(t)
                     yMat = [yMat; y];
                 end
@@ -229,7 +229,7 @@ for idev = 1:nDev
                 continue
             end
 
-            %% ---------- mean ¡À SE ----------
+            %% ---------- mean Â± SE ----------
             mu = mean(yMat, 1, 'omitnan');
             nPerTime = sum(~isnan(yMat), 1);
             se = std(yMat, 0, 1, 'omitnan') ./ sqrt(nPerTime);
@@ -359,11 +359,11 @@ end
 
 maxSub = max(nSub);
 
-amplitude_diff.mmn = nan(nDay, maxSub, nDev);   % Êµ¼Ê¶ÔÓ¦ P2 amplitude
-amplitude_diff.p3  = nan(nDay, maxSub, nDev);   % Êµ¼Ê¶ÔÓ¦ P450 amplitude
+amplitude_diff.mmn = nan(nDay, maxSub, nDev);   % å®é™…å¯¹åº” P2 amplitude
+amplitude_diff.p3  = nan(nDay, maxSub, nDev);   % å®é™…å¯¹åº” P450 amplitude
 
-latency_diff.mmn   = nan(nDay, maxSub, nDev);   % Êµ¼Ê¶ÔÓ¦ P2 50% area latency
-latency_diff.p3    = nan(nDay, maxSub, nDev);   % Êµ¼Ê¶ÔÓ¦ P450 50% area latency
+latency_diff.mmn   = nan(nDay, maxSub, nDev);   % å®é™…å¯¹åº” P2 50% area latency
+latency_diff.p3    = nan(nDay, maxSub, nDev);   % å®é™…å¯¹åº” P450 50% area latency
 
 for md = 1:nDay
     for idev = 1:nDev
@@ -386,7 +386,7 @@ for md = 1:nDay
                 % Amplitude: mean voltage within predefined window
                 amplitude_diff.mmn(md,isub,idev) = mean(y, 'omitnan');
 
-                % P2 ÊÇÕıÏò³É·Ö£ºpositive area latency
+                % P2 æ˜¯æ­£å‘æˆåˆ†ï¼špositive area latency
                 latency_diff.mmn(md,isub,idev) = fractional_area_latency_50(t, y, 'positive');
 
             end
@@ -402,7 +402,7 @@ for md = 1:nDay
                 % Amplitude: mean voltage within predefined window
                 amplitude_diff.p3(md,isub,idev) = mean(y, 'omitnan');
 
-                % P450 ÊÇÕıÏò³É·Ö£ºpositive area latency
+                % P450 æ˜¯æ­£å‘æˆåˆ†ï¼špositive area latency
                 latency_diff.p3(md,isub,idev) = fractional_area_latency_50(t, y, 'positive');
 
             end
@@ -414,9 +414,9 @@ end
 
 %% ================== Save ERP summary ==================
 
-% ×¢Òâ£º
-% ÕâÀï±äÁ¿ÃûÎªÁË¼æÈİºóĞøÍ³¼Æ½Å±¾£¬ÈÔÈ»Ê¹ÓÃ mmn / p3¡£
-% µ«Êµ¼Êº¬ÒåÊÇ£º
+% æ³¨æ„ï¼š
+% è¿™é‡Œå˜é‡åä¸ºäº†å…¼å®¹åç»­ç»Ÿè®¡è„šæœ¬ï¼Œä»ç„¶ä½¿ç”¨ mmn / p3ã€‚
+% ä½†å®é™…å«ä¹‰æ˜¯ï¼š
 %   amplitude_mmn = P2 amplitude
 %   latency_mmn   = P2 50% area latency
 %   amplitude_p3  = P450 amplitude
@@ -430,16 +430,16 @@ latency_p3    = latency_diff.p3;
 
 
 %% ================== Insert missing subject positions ==================
-% Ä¿±ê£º°Ñ²»Í¬ md ÖĞÈ±Ê§µÄ subject Î»ÖÃ²¹³É NaN£¬
-%      ²¢½«ºóÃæµÄÊı¾İÕûÌåÍùºóÒÆ¶¯µ½ÕıÈ· subject Î»ÖÃ¡£
+% ç›®æ ‡ï¼šæŠŠä¸åŒ md ä¸­ç¼ºå¤±çš„ subject ä½ç½®è¡¥æˆ NaNï¼Œ
+%      å¹¶å°†åé¢çš„æ•°æ®æ•´ä½“å¾€åç§»åŠ¨åˆ°æ­£ç¡® subject ä½ç½®ã€‚
 
 nSubTotal = 20;
 
 missingSub = cell(4,1);
-missingSub{1} = [5 6 7 12 17];   % md = 1 È±Ê§Î»ÖÃ
-missingSub{2} = [];              % md = 2 ÎŞÈ±Ê§
-missingSub{3} = [16];            % md = 3 È±Ê§Î»ÖÃ
-missingSub{4} = [];              % md = 4 ÎŞÈ±Ê§
+missingSub{1} = [5 6 7 12 17];   % md = 1 ç¼ºå¤±ä½ç½®
+missingSub{2} = [];              % md = 2 æ— ç¼ºå¤±
+missingSub{3} = [16];            % md = 3 ç¼ºå¤±ä½ç½®
+missingSub{4} = [];              % md = 4 æ— ç¼ºå¤±
 
 varList = {'amplitude_mmn', 'amplitude_p3', 'latency_mmn', 'latency_p3'};
 
@@ -458,7 +458,7 @@ for ivar = 1:numel(varList)
         nValid = numel(validSubIdx);
 
         if nValid > size(X,2)
-            warning('%s Day %d: nValid > Ô­Ê¼ subject Êı£¬×Ô¶¯½Ø¶Ï¡£', varList{ivar}, md);
+            warning('%s Day %d: nValid > åŸå§‹ subject æ•°ï¼Œè‡ªåŠ¨æˆªæ–­ã€‚', varList{ivar}, md);
             nValid = size(X,2);
             validSubIdx = validSubIdx(1:nValid);
         end
@@ -511,12 +511,12 @@ function lat50 = fractional_area_latency_50(t, y, polarity)
     switch lower(polarity)
 
         case 'positive'
-            % Ö»¼ÆËãÕıÏòÃæ»ı
+            % åªè®¡ç®—æ­£å‘é¢ç§¯
             yy = y;
             yy(yy < 0) = 0;
 
         case 'negative'
-            % ¸ºÏò³É·Ö£º°Ñ¸º²¨È¡·´£¬Ö»¼ÆËã¸ºÏòÃæ»ı
+            % è´Ÿå‘æˆåˆ†ï¼šæŠŠè´Ÿæ³¢å–åï¼Œåªè®¡ç®—è´Ÿå‘é¢ç§¯
             yy = -y;
             yy(yy < 0) = 0;
 
@@ -533,7 +533,7 @@ function lat50 = fractional_area_latency_50(t, y, polarity)
     cumArea = cumtrapz(t, yy);
     targetArea = 0.5 * totalArea;
 
-    % ÕÒÀÛ¼ÆÃæ»ıµÚÒ»´Î´ïµ½ 50% µÄÎ»ÖÃ
+    % æ‰¾ç´¯è®¡é¢ç§¯ç¬¬ä¸€æ¬¡è¾¾åˆ° 50% çš„ä½ç½®
     idxCross = find(cumArea >= targetArea, 1, 'first');
 
     if isempty(idxCross)
@@ -545,7 +545,7 @@ function lat50 = fractional_area_latency_50(t, y, polarity)
         return
     end
 
-    % ÏßĞÔ²åÖµ£¬Ìá¸ßÊ±¼äµã¾«¶È
+    % çº¿æ€§æ’å€¼ï¼Œæé«˜æ—¶é—´ç‚¹ç²¾åº¦
     t1 = t(idxCross - 1);
     t2 = t(idxCross);
     a1 = cumArea(idxCross - 1);
