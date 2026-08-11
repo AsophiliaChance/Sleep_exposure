@@ -2,7 +2,7 @@
 %%
 clear;clc;
 %
-datadir={'day1','day2','day3'};
+datadir={'day0','day1','day2','day3'};
 basedir = 'G:\study2\002\sleep\2ndanalysis\analysis';
 savedir =' G:\study2\002\sleep\2ndanalysis\analysis\results';
 filt ='*_preprocessed1a.set';
@@ -37,7 +37,7 @@ for curfile =1:length(files)
 
 
  
-        %% 基线校正，重新分段。
+        %% 禄霉脧脽脨拢脮媒拢卢脰脴脨脗路脰露脦隆拢
         
         for idev=1:length(deviant_types)
                            
