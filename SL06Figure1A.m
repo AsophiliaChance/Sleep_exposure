@@ -106,7 +106,7 @@ for idev = 1:nDev
     end
 end
 
-% deviant    day ?  ?     ?    Œþ  
+% deviant    day ?  ?     ?    Å’Ã¾  
 Diff_ga = squeeze(mean(mean(Diff_ga,2,'omitnan'),1,'omitnan'));
 DEV_ga  = squeeze(mean(mean(DEV_ga,2,'omitnan'),1,'omitnan'));
 
@@ -125,7 +125,7 @@ winlenght = 0.035;
 idx_p2 = find(time >= 0.35 & time <= 0.47);
 
 if isempty(idx_p2)
-    error('P2           ?  ?  ?     time   ¦¶  ');
+    error('P2           ?  ?  ?     time   Â¦Â¶  ');
 end
 
 [~, p2Idx] = max(Diff_ga(idx_p2));
@@ -135,7 +135,7 @@ p2Time = time(idx_p2(p2Idx));
 idx_p450 = find(time >= 0.5 & time <= 0.7);
 
 if isempty(idx_p450)
-    error('P450           ?  ?  ?     time   ¦¶  ');
+    error('P450           ?  ?  ?     time   Â¦Â¶  ');
 end
 
 [~, p450Idx] = max(Diff_ga(idx_p450));
@@ -273,7 +273,7 @@ for idev = 1:nDev
             'LineStyle', '--', ...
             'LineWidth', 1);
 
-        % Standard / Deviant / Differential §³        
+        % Standard / Deviant / Differential Â§Â³        
         hSubTitle = title(graphname{idata}, 'FontWeight', 'bold');
         set(hSubTitle, ...
             'Units', 'normalized', ...
@@ -448,15 +448,15 @@ latency_p3    = latency_diff.p3;
 
 
 %% ================== Insert missing subject positions ==================
-% ? ? ? ? md   ??   subject ¦Ë ¨°    NaN  
-%                            ?     ? subject ¦Ë ¨¢ 
+% ? ? ? ? md   ??   subject Â¦Ã‹ Â¨Â°    NaN  
+%                            ?     ? subject Â¦Ã‹ Â¨Â¢ 
 
 nSubTotal = 20;
 
 missingSub = cell(4,1);
-missingSub{1} = [5 6 7 12 17];   % md = 1 ??¦Ë  
+missingSub{1} = [5 6 7 12 17];   % md = 1 ??Â¦Ã‹  
 missingSub{2} = [];              % md = 2   ??
-missingSub{3} = [16];            % md = 3 ??¦Ë  
+missingSub{3} = [16];            % md = 3 ??Â¦Ã‹  
 missingSub{4} = [];              % md = 4   ??
 
 varList = {'amplitude_mmn', 'amplitude_p3', 'latency_mmn', 'latency_p3'};
@@ -551,7 +551,7 @@ function lat50 = fractional_area_latency_50(t, y, polarity)
     cumArea = cumtrapz(t, yy);
     targetArea = 0.5 * totalArea;
 
-    %    ?      ? ¦Ä? 50%   ¦Ë  
+    %    ?      ? Â¦Ã„? 50%   Â¦Ã‹  
     idxCross = find(cumArea >= targetArea, 1, 'first');
 
     if isempty(idxCross)
