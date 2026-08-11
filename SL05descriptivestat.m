@@ -19,10 +19,10 @@
 %     ActiveX is available, usually on Windows.
 %
 % Input variables from erp_statisticsdata_simple.mat:
-%   amplitude_mmn: P2 amplitude,    Night กม Subject กม DeviantType
-%   amplitude_p3 : P450 amplitude,  Night กม Subject กม DeviantType
-%   latency_mmn  : P2 latency,      Night กม Subject กม DeviantType
-%   latency_p3   : P450 latency,    Night กม Subject กม DeviantType
+%   amplitude_mmn: P2 amplitude,    Night ยกร Subject ยกร DeviantType
+%   amplitude_p3 : P450 amplitude,  Night ยกร Subject ยกร DeviantType
+%   latency_mmn  : P2 latency,      Night ยกร Subject ยกร DeviantType
+%   latency_p3   : P450 latency,    Night ยกร Subject ยกร DeviantType
 % ============================================================
 
 clc; clear; close all;
@@ -104,7 +104,7 @@ for icomp = 1:numel(componentLabels)
 
     for imeasure = 1:numel(measureLabels)
 
-        A = Data{icomp, imeasure};  % Night กม Subject กม DeviantType
+        A = Data{icomp, imeasure};  % Night ยกร Subject ยกร DeviantType
 
         for idev = 1:numel(devLabels)
 
