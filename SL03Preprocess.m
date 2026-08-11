@@ -1,7 +1,6 @@
-% ¼ì²é¼ä¾àÊÇ·ñÕıÈ·£¬ÄÄÒ»ĞĞ¼ä¾àÕıÈ·¾Í±£ÁôÄÄÒ»ĞĞ
 clear;clc;
 eeglab
-datadir={'day1','day2','day3'};
+datadir={'day0','day1','day2','day3'};
 filt='*_MCor1.set';
 load('G:\study2\002\sleep\data_preprocess\possibletriger.mat')
 basedir = 'G:\study2\002\sleep\2ndanalysis\analysis';
@@ -31,7 +30,7 @@ for curfile =1:length(files)
     EEG = pop_eegfiltnew(EEG, 'locutoff',49,'hicutoff',51,'revfilt',1);
 
     
-    %% È¥³ı³¤¿ÕÓà
+    %% å»é™¤é•¿ç©ºä½™
     temp = struct2cell(EEG.event.').'; type = temp(:, 7); clear temp;%find(ismember(type,'boundary'));
     ind=find(ismember(type,'0')==0);ind=[1;ind];
     latency = [EEG.event.latency].';
@@ -66,31 +65,31 @@ for curfile =1:length(files)
     % - Low signal below 0.01 ?V
     EEG = pop_epoch( EEG, {  trigger{1}  trigger{2}  }, [-2         1],'valuelim', [-art_thresh   art_thresh]);
 %%    
-    threshold = 75; % Ìİ¶ÈãĞÖµ
-    bad_epochs = []; % ±£´æÓĞÒì³£Ìİ¶ÈµÄ epoch Ë÷Òı
+    threshold = 75; % æ¢¯åº¦é˜ˆå€¼
+    bad_epochs = []; % ä¿å­˜æœ‰å¼‚å¸¸æ¢¯åº¦çš„ epoch ç´¢å¼•
     
     for epoch_idx = 1:EEG.trials
-        % »ñÈ¡µ±Ç° epoch Êı¾İ£¬Î¬¶È£º[Í¨µÀÊı x Ê±¼äµãÊı]
+        % è·å–å½“å‰ epoch æ•°æ®ï¼Œç»´åº¦ï¼š[é€šé“æ•° x æ—¶é—´ç‚¹æ•°]
         data = EEG.data(1:3,:,epoch_idx);
         
-        % ¼ÆËãÃ¿¸öÍ¨µÀµÄÌİ¶È
-        gradient = abs(diff(data, 1, 2)); % ¶ÔÊ±¼äÖáÈ¡²î·Ö
+        % è®¡ç®—æ¯ä¸ªé€šé“çš„æ¢¯åº¦
+        gradient = abs(diff(data, 1, 2)); % å¯¹æ—¶é—´è½´å–å·®åˆ†
         
-        % ¼ì²éÊÇ·ñÓĞÍ¨µÀ³¬¹ıãĞÖµ
+        % æ£€æŸ¥æ˜¯å¦æœ‰é€šé“è¶…è¿‡é˜ˆå€¼
         if any(gradient(:) > threshold)
             bad_epochs = [bad_epochs, epoch_idx];
         end
     end
     
-    % ±ê¼Ç»òÌŞ³ıÒì³£ epoch
-    EEG = pop_select(EEG, 'notrial', bad_epochs); % É¾³ıÒì³£ epoch
+    % æ ‡è®°æˆ–å‰”é™¤å¼‚å¸¸ epoch
+    EEG = pop_select(EEG, 'notrial', bad_epochs); % åˆ é™¤å¼‚å¸¸ epoch
     %%
-threshold = 0.01;  % ÉèÖÃµÍĞÅºÅÖµµÄãĞÖµ
+threshold = 0.01;  % è®¾ç½®ä½ä¿¡å·å€¼çš„é˜ˆå€¼
 
-% ¼ÆËãÃ¿¸ö epoch µÄ×î´ó¾ø¶ÔÖµ
+% è®¡ç®—æ¯ä¸ª epoch çš„æœ€å¤§ç»å¯¹å€¼
 max_abs_values = squeeze(max(max(abs(EEG.data), [], 2), [], 1));
 
-% ÕÒµ½µÍÓÚãĞÖµµÄ epochs Ë÷Òı
+% æ‰¾åˆ°ä½äºé˜ˆå€¼çš„ epochs ç´¢å¼•
 invalid_epochs = find(max_abs_values < threshold);
 if ~isempty(invalid_epochs)
     EEG = pop_select(EEG, 'notrial', invalid_epochs);
