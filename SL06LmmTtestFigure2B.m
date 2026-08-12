@@ -10,10 +10,10 @@
 %
 % 模型比较：
 %   Model 0:
-%       Y ~ Days * DeviantType + (1|Subjects)
+%       Y ~ Days * DeviantType + (1+ Days|Subjects)
 %
 %   Model 1:
-%       Y ~ Days * DeviantType + Exposure + (1|Subjects)
+%       Y ~ Days * DeviantType + Exposure + (1+ Days|Subjects)
 %
 %   使用 ML 比较两个模型；
 %   若 Exposure 模型显著改善拟合，则选择带 Exposure 的模型；
@@ -21,7 +21,7 @@
 %
 % 后续分析：
 %   使用选定模型，并用 REML 重拟合：
-%       Y ~ Days * DeviantType (+ Exposure) + (1|Subjects)
+%       Y ~ Days * DeviantType (+ Exposure) + (1+ Days|Subjects)
 %
 % 多重比较校正：
 %   - 不对 omnibus model effects 做 FDR 校正
@@ -201,8 +201,8 @@ for m = 1:2
             continue;
         end
 
-        formula_noExp = 'Y ~ Days * DeviantType + (1|Subjects)';
-        formula_Exp   = 'Y ~ Days * DeviantType + Exposure + (1|Subjects)';
+        formula_noExp = 'Y ~ Days * DeviantType + (1+ Days|Subjects)';
+        formula_Exp   = 'Y ~ Days * DeviantType + Exposure + (1+ Days|Subjects)';
 
         lme_noExp_ML = fitlme(Tc_compare, formula_noExp, ...
             'FitMethod', 'ML', 'DummyVarCoding', dummyCoding);
