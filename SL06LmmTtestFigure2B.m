@@ -1,5 +1,4 @@
 %% ============================================================
-% SL06_day_main_effect_withExposure_DeviantType_4days_NoFDR_BonfPairwise.m
 %
 % 适用于：
 %   - Day/Night = 4
